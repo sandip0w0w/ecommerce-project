@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Title from '../component/Title'
 import AllCollections from '../component/AllCollections'
 import { assets } from '../assets/assets'
+import { ShopContext } from '../context/ShopContext'
 
 function Collections() {
     const [filterHidden, setFilterHidden] = useState(true);

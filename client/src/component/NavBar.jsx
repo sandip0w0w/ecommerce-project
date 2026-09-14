@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { Search, User, ShoppingBasket } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
+import { ShopContext } from '../context/ShopContext';
 
 function NavBar() {
-
+    const {setShowSearch} = useContext(ShopContext);
     const [visible, setVisibile] = useState(false);
 
     return (
@@ -27,7 +28,7 @@ function NavBar() {
 
             {/* right section */}
             <div className="flex items-center gap-6">
-                <img src="search_icon.png" alt="" className="w-4 cursor-pointer" />
+                <img onClick={() => setShowSearch((prev) => !prev)} src="search_icon.png" alt="" className="w-4 cursor-pointer" />
                 <div className="group relative"
                 >
                     <img src="profile_icon.png" alt="" className="w-4 cursor-pointer" />

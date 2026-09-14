@@ -4,11 +4,15 @@ import Title from './Title'
 import ProductItems from './ProductItems';
 
 function AllCollections({category, subCategory, sortType}) { // 2:30
-    const { products, currency } = useContext(ShopContext);
+    const { products, currency, search, showSearch } = useContext(ShopContext);
     const [selectedProducts, setSeletectedProducts] = useState([]);
    
     const applyFilters = () => {
         let productCopy = products.slice();
+
+        if (search && showSearch){
+            productCopy = productCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()));
+        }
 
         if(category.length > 0){
             productCopy = productCopy.filter(item => category.includes(item.category))
@@ -39,7 +43,7 @@ function AllCollections({category, subCategory, sortType}) { // 2:30
 
     useEffect(() => {
         applyFilters();
-    },[category, subCategory]);
+    },[category, subCategory, search,showSearch]);
 
     useEffect(() => {
         sortProducts();

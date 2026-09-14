@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function ProductItems({products, currency}) {
+function ProductItems({products, currency}) { // 2:46
   return (
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(165px,1fr))] gap-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(170px,0.8fr))] gap-4 place-content-center">
         {products.map((product) => (
             <Link to = {`/product/${product._id}`} key = {product._id}  className="flex flex-col mb-5 h-80">
                 <div className="flex-3 overflow-hidden">
