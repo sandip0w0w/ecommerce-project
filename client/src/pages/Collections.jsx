@@ -30,7 +30,7 @@ function Collections() {
     }
 
 
-    return ( // 2:00
+    return ( 
         <div className="flex flex-col sm:flex-row border-t border-t-gray-300 py-15 gap-10">
             {/* filters */}
             <div className="flex-1 py-5">

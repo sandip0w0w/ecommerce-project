@@ -6,15 +6,19 @@ import Collections from './pages/Collections'
 import FooterInfo from './component/FooterInfo'
 import Footer from './component/Footer'
 import SearchBar from './component/SearchBar'
+import ProductDetail from './pages/ProductDetail'
+import ScrollToTop from './component/ScrollToTop'
 
 function App() {
   return (
     <div className = 'px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
       <NavBar />
       <SearchBar />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path = "/collection" element = {<Collections />} />
+        <Route path = "/product/:id" element = {<ProductDetail/>} />
       </Routes>
       <FooterInfo />
       <Footer />

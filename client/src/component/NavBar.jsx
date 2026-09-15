@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react'
 
-import { Search, User, ShoppingBasket } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
+import { assets } from '../assets/assets';
 
 function NavBar() {
     const {setShowSearch} = useContext(ShopContext);
@@ -12,7 +12,7 @@ function NavBar() {
         <div className='flex justify-between items-center py-4'>
             {/* left section */}
             <Link to = "/">
-            <img src={'logo.png'} className='w-30' />
+            <img src={assets.logo} className='w-30' />
             </Link>
 
             {/* middle section */}
@@ -28,10 +28,10 @@ function NavBar() {
 
             {/* right section */}
             <div className="flex items-center gap-6">
-                <img onClick={() => setShowSearch((prev) => !prev)} src="search_icon.png" alt="" className="w-4 cursor-pointer" />
+                <img onClick={() => setShowSearch((prev) => !prev)} src={assets.search_icon} alt="" className="w-4 cursor-pointer" />
                 <div className="group relative"
                 >
-                    <img src="profile_icon.png" alt="" className="w-4 cursor-pointer" />
+                    <img src={assets.profile_icon} alt="" className="w-4 cursor-pointer" />
                     <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4 top-full">
                         <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
                             <p className='cursor-pointer hover:text-black'>My Profile</p>
@@ -42,11 +42,11 @@ function NavBar() {
                 </div>
 
                 <Link to='/cart' className='relative'>
-                    <img src="cart_icon.png" alt="" className="w-4 cursor-pointer" />
+                    <img src={assets.cart_icon} alt="" className="w-4 cursor-pointer" />
                     <p className="absolute right-[-5px] bottom-[-6px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[7px]">10</p>
 
                 </Link>
-                <img onClick = {() => setVisibile(true)} src="menu_icon.png" alt="" className="w-5 cursor-pointer sm:hidden" />
+                <img onClick = {() => setVisibile(true)} src={assets.menu_icon} alt="" className="w-5 cursor-pointer sm:hidden" />
 
             </div>
 
