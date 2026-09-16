@@ -4,7 +4,7 @@ import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 
-function Cart() { // 4:16
+function Cart() { 
     const { products, cartItems, currency, updateQuantity, getCartTotal } = useContext(ShopContext);
     const shippingFee = 10;
     const totalCheckout = getCartTotal() > 0 ? (getCartTotal() + shippingFee) : 0;

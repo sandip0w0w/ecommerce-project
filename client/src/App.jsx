@@ -11,6 +11,7 @@ import ScrollToTop from './component/ScrollToTop'
 import { ToastContainer, toast } from 'react-toastify';
 import Cart from './pages/Cart'
 import PlaceOrder from './pages/PlaceOrder'
+import Orders from './pages/Orders'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path = "/product/:id" element = {<ProductDetail/>} />
         <Route path = "/cart" element = {<Cart />} />
         <Route path = "/place-order" element = {<PlaceOrder />} />
+        <Route path = "/orders" element = {<Orders />} />
 
       </Routes>
       <FooterInfo />
