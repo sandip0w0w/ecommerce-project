@@ -5,7 +5,7 @@ import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 
 function NavBar() {
-    const {setShowSearch} = useContext(ShopContext);
+    const {setShowSearch, getCartCount  } = useContext(ShopContext);
     const [visible, setVisibile] = useState(false);
 
     return (
@@ -43,7 +43,7 @@ function NavBar() {
 
                 <Link to='/cart' className='relative'>
                     <img src={assets.cart_icon} alt="" className="w-4 cursor-pointer" />
-                    <p className="absolute right-[-5px] bottom-[-6px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[7px]">10</p>
+                    <p className="absolute right-[-5px] bottom-[-6px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[7px]">{getCartCount()}</p>
 
                 </Link>
                 <img onClick = {() => setVisibile(true)} src={assets.menu_icon} alt="" className="w-5 cursor-pointer sm:hidden" />

@@ -5,10 +5,11 @@ import { assets } from '../assets/assets';
 import Title from '../component/Title';
 import ProductItems from '../component/ProductItems';
 
-function ProductDetail() { // 2:50
+function ProductDetail() { // 3:34
     const { id } = useParams();
-    const { products, currency } = useContext(ShopContext);
+    const { products, currency, addToCart } = useContext(ShopContext);
     const [currentProduct, setCurrentProduct] = useState(null);
+    const [productSize, setProductSize] = useState('');
     const ratings = () => {
         return Math.floor(Math.random() * (10 - 1 + 1)) + 1;
     }
@@ -69,13 +70,13 @@ function ProductDetail() { // 2:50
                     <div className="flex flex-col my-8 gap-2">
                         <p className="font-normal text-sm">Select Size</p>
                         <div className="flex gap-2">
-                            {currentProduct.sizes.map((size) => (
-                                <button className="border border-gray-300 py-1 px-3 bg-gray-200 active:border-amber-400">{size}</button>
+                            {currentProduct.sizes.map((size, idx) => (
+                                <button onClick ={() => setProductSize(size)}  className={`border py-1 px-3 bg-gray-200 ${size === productSize ? 'border-amber-500':"border-gray-300"} cursor-pointer`}  key = {idx}>{size}</button>
                             ))}
                         </div>
                     </div>
 
-                    <button className=" bg-black text-white py-2 px-6 text-sm">ADD TO CART</button>
+                    <button className=" bg-black text-white py-2 px-6 text-sm cursor-pointer active:opacity-75 active:scale-105 transition ease-in-out" onClick = {() => addToCart(currentProduct._id, productSize)}>ADD TO CART</button>
                     <div className="mt-5 border-t border-t-gray-300"></div>
                     <div className="mt-4 flex flex-col gap-1 font-base text-xs text-gray-500">
                         <p>100% Original product.</p>
@@ -103,7 +104,7 @@ function ProductDetail() { // 2:50
             {/* related products */}
             
             <div className="my-24">
-            <p className="text-center text-2xl"><Title text1 = {'RELATED'} text2 = {'PRODUCTS'} /></p>
+            <div className="text-center text-2xl"><Title text1 = {'RELATED'} text2 = {'PRODUCTS'} /></div>
             <ProductItems products={relatedProducts.slice(0,6)} currency={currency} />
             </div>  
         </div>
