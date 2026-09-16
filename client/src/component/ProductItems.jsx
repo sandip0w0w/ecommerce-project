@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function ProductItems({products, currency}) { // 2:46
+function ProductItems({products, currency}) { 
   return (
       <div className="grid grid-cols-[repeat(auto-fit,minmax(170px,0.8fr))] gap-4 place-content-center">
         {products.map((product) => (
