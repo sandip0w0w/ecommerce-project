@@ -10,6 +10,7 @@ import ProductDetail from './pages/ProductDetail'
 import ScrollToTop from './component/ScrollToTop'
 import { ToastContainer, toast } from 'react-toastify';
 import Cart from './pages/Cart'
+import PlaceOrder from './pages/PlaceOrder'
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path = "/collection" element = {<Collections />} />
         <Route path = "/product/:id" element = {<ProductDetail/>} />
         <Route path = "/cart" element = {<Cart />} />
+        <Route path = "/place-order" element = {<PlaceOrder />} />
+
       </Routes>
       <FooterInfo />
       <Footer />
