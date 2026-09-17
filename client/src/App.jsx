@@ -14,6 +14,7 @@ import PlaceOrder from './pages/PlaceOrder'
 import Orders from './pages/Orders'
 import LoginPage from './pages/LoginPage'
 import About from './pages/About'
+import Contact from './pages/Contact'
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
         <Route path = "/place-order" element = {<PlaceOrder />} />
         <Route path = "/orders" element = {<Orders />} />
         <Route path =  "/about" element = {<About />} />
+        <Route path = "/contact" element = {<Contact />} />
+
 
       </Routes>
       <FooterInfo />
