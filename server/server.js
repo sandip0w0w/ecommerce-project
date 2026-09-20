@@ -1,0 +1,40 @@
+require('dotenv').config();
+const express = require('express')
+const cors = require('cors');
+const connectDb = require('./config/mongoDb');
+const mongoose = require('mongoose');
+const connectCloudinary = require('./config/cloudinary');
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes')
+
+// app config
+
+const app = express();
+const PORT  = process.env.PORT || 4000
+
+//connect database
+connectDb();
+connectCloudinary();
+
+// middlewares
+app.use(express.json())
+app.use(cors())
+
+
+// api endpoints
+app.get('/', (req, res) =>{
+    res.send("Server is running")
+})
+
+app.use("/api/user", userRoutes)
+app.use("/api/product", productRoutes)
+
+
+
+mongoose.connection.once('open', () => {
+    console.log('MongoDb connected');
+    app.listen(PORT, () => {
+        console.log(`Server running on port: ${PORT}`);
+    })
+})
+
