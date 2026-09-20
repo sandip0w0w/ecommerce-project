@@ -3,7 +3,7 @@ import Title from '../component/Title'
 import { assets } from '../assets/assets'
 import LetterBox from '../component/LetterBox'
 
-function Contact() { // 5:09
+function Contact() {
     return (
         <div className="border-t border-gray-300 pt-7 flex flex-col gap-4">
             <h2 className='text-xl self-center'><Title text1={'CONTACT'} text2={'US'} /></h2>
