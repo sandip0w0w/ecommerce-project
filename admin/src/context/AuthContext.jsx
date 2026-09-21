@@ -18,7 +18,6 @@ export function AuthProvider({children}){
         }
         try{
             const { data } = await api.get("user/auth/session")
-            console.log(data.user);
             setUser(data.user)
         }catch(error){
             // Token is invalid, clear it
