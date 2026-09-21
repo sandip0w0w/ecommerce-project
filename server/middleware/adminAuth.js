@@ -1,24 +1,31 @@
 const jwt = require('jsonwebtoken')
 
-const adminAuth = async (req, res, next) => {
+const protect = (req, res, next) => {
     try{
-        const token  = req.session?.token || req.headers.authorization?.split(' ')[1];
-        if(!token){
-            return res.status(401).json({message: "No Token Found"});
+        const authHeader = req.headers.authorization;
+        if(!authHeader || !authHeader.startsWith("Bearer ")){
+            return res.status(401).json({error: "Unauthorized"});
         }
-        const tokenDecode  = jwt.verify(token, process.env.JWT_SECRET);
 
-        const isAdmin = tokenDecode.role == "ADMIN" &&
-                        tokenDecode.email == process.env.ADMIN_EMAIL;
-        
-        if(!isAdmin){
-            return res.status(401).json({message: "Not Authorized To Access This Resource"});
+        const token = authHeader.split(" ")[1];
+        const session = jwt.verify(token, process.env.JWT_SECRET)
+
+        if(!session){
+            return res.status(401).json({ error: "Unauthorized" });
         }
+
+        req.session = session;
         next()
-    }catch(error){
-        console.log(error);
-        return res.status(400).json({message: error.message});
+    } catch(error){
+            return res.status(401).json({ error: "Unauthorized" });
+
     }
 }
+const protectAdmin = (req, res, next) => {
+    if(req?.session?.role !== "ADMIN"){
+        return res.status(403).json({ error: "Admin access required "});
+    }
+    next()
+}
 
-module.exports = adminAuth;
+module.exports = {protect, protectAdmin};
