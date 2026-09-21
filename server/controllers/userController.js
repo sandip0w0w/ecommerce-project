@@ -107,8 +107,15 @@ const adminLogin = async (req, res) => {
 
 }
 
+// get session
+const session = async(req, res) => {
+    const session = req.session;
+    return res.json({user: session});
+}
+
 module.exports = {
     loginUser,
     registerUser,
-    adminLogin
+    adminLogin,
+    session
 }
