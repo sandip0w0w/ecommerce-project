@@ -17,6 +17,7 @@ function Add() { // 9:02
     e.preventDefault();
     try{
     const formData = new FormData(e.target);
+    formData.set("bestseller", e.target.bestseller.checked);
      formData.append("sizes", JSON.stringify(sizes)); 
      image1 && formData.append("image1", image1);
      image2 && formData.append("image2", image2);
@@ -72,9 +73,9 @@ function Add() { // 9:02
           <div className="flex flex-col gap-2 shrink-0">
             <p className="font-normal text-sm text-gray-600">Product Category</p>
             <select name="category" className='border border-gray-300 rounded py-1 px-2 text-gray-600  focus:outline-pink-600 focus:outline-1' >
-              <option value="men">Men</option>
-              <option value="women">Women</option>
-              <option value="kids">Kids</option>
+              <option value="Men">Men</option>
+              <option value="Women">Women</option>
+              <option value="Kids">Kids</option>
             </select>
           </div>
           

@@ -13,15 +13,11 @@ function ProductDetail() { // 3:34
     const ratings = () => {
         return Math.floor(Math.random() * (10 - 1 + 1)) + 1;
     }
-    
     const [relatedProducts, setRelatedProducts] = useState([])
-
-
-
     useEffect(() => {
         setCurrentProduct(products.find(item => item._id === id));
         setRelatedProducts(products.filter(item => (item.name).includes(products.find(item => item._id === id).name)));
-    }, [id]);
+    }, [id, products]);
 
     return currentProduct ? (
         <div className="border-t-2 border-t-gray-300 pt-10">

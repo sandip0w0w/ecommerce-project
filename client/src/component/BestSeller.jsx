@@ -6,10 +6,9 @@ import Title from './Title';
 function BestSeller() {
   const { products, currency } = useContext(ShopContext);
     const [bestSeller, setBestSellers] = useState([]);
-
     useEffect(() => {
-        setBestSellers(products.slice(10,15));
-    },[])
+        setBestSellers(products.filter((item) => item.bestseller));
+    },[products])
   return (
     <div className="flex flex-col my-10">
         <div className="text-center py-7 text-2xl">

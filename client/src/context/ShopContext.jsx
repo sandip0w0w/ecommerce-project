@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react"
-import {products} from '../assets/assets';
 import { toast } from "react-toastify";
+import api from "../api/axios";
 
 export const ShopContext = createContext();
 
@@ -11,6 +11,22 @@ const ShopContextProvider = (props) => {
     const [showSearch, setShowSearch] = useState(false);
     const [cartItems, setCartItems] = useState({});
     const [orderedItems, setOrderedItems] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchProducts = async () => {
+        try{
+            const response = await api.get("/product");
+            setProducts(response.data.products);
+        }catch(error){
+            console.log(error.message);
+        }finally{
+            setLoading(false);
+        }       
+    }
+    useEffect(() => {
+    fetchProducts();
+    },[])
 
     const addToCart = async(itemId, productSize) => {
         
@@ -45,7 +61,9 @@ const ShopContextProvider = (props) => {
                     if(cartItems[items][item] > 0){
                         totalCount += cartItems[items][item];
                     }
-                }catch(error){}
+                }catch(error){
+                    console.log(error.message);
+                }
                 
             }
         }
@@ -68,7 +86,9 @@ const ShopContextProvider = (props) => {
                     if(cartItems[items][item] > 0){
                         totalAmount += itemInfo.price * cartItems[items][item];
                     }
-                }catch(error){}
+                }catch(error){
+                    console.log(error.message);
+                }
             }
         }
         return totalAmount;
@@ -78,7 +98,7 @@ const ShopContextProvider = (props) => {
         products, currency, delivery_fee,
         search, setSearch, showSearch,
         setShowSearch, cartItems, addToCart, getCartCount,
-        updateQuantity, getCartTotal, setCartItems
+        updateQuantity, getCartTotal, setCartItems, orderedItems, setOrderedItems, loading
 
     }
 

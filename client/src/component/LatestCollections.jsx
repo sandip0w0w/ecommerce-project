@@ -9,7 +9,7 @@ function LatestCollections() {
 
     useEffect(() => {
         setLatestProducts(products.slice(0,10));
-    },[])
+    },[products]);
   return (
     <div className="flex flex-col my-10">
         <div className="text-center py-7 text-2xl">

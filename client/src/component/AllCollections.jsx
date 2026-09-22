@@ -4,55 +4,53 @@ import Title from './Title'
 import ProductItems from './ProductItems';
 
 function AllCollections({category, subCategory, sortType}) { // 2:30
-    const { products, currency, search, showSearch } = useContext(ShopContext);
+    const { products, currency, search, showSearch, loading } = useContext(ShopContext);
     const [selectedProducts, setSeletectedProducts] = useState([]);
-   
-    const applyFilters = () => {
+   const applyFiltersAndSort = () => {
         let productCopy = products.slice();
 
-        if (search && showSearch){
-            productCopy = productCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()));
+        // 1. Search Filter
+        if (search && showSearch) {
+            productCopy = productCopy.filter(item => 
+                item.name.toLowerCase().includes(search.toLowerCase())
+            );
         }
 
-        if(category.length > 0){
-            productCopy = productCopy.filter(item => category.includes(item.category))
+        // 2. Category Filter
+        if (category && category.length > 0) {
+            productCopy = productCopy.filter(item => category.includes(item.category));
         }
 
-        if(subCategory.length > 0){
-            productCopy = productCopy.filter(item => subCategory.includes(item.subCategory))
+        // 3. SubCategory Filter
+        if (subCategory && subCategory.length > 0) {
+            productCopy = productCopy.filter(item => subCategory.includes(item.subCategory));
+        }
+
+        // 4. Sorting
+        switch (sortType) {
+            case 'low-high':
+                productCopy.sort((a, b) => a.price - b.price);
+                break;
+            case 'high-low':
+                productCopy.sort((a, b) => b.price - a.price);
+                break;
+            default:
+                break;
         }
 
         setSeletectedProducts(productCopy);
     }
 
-    const sortProducts = () => {
-        let fpCopy = selectedProducts.slice();
-    
-        switch(sortType){
-            case 'low-high':
-                setSeletectedProducts(fpCopy.sort((a,b) => (a.price - b.price)));
-                break;
-            case 'high-low':
-                setSeletectedProducts(fpCopy.sort((a,b) => (b.price - a.price)));
-                break;
-            default:
-                applyFilters();
-                break;
-        }
+    useEffect(() => {
+        applyFiltersAndSort();
+    }, [products, category, subCategory, search, showSearch, sortType]);
+
+    if (loading) {
+        return <div>Loading products...</div>;
     }
-
-    useEffect(() => {
-        applyFilters();
-    },[category, subCategory, search,showSearch]);
-
-    useEffect(() => {
-        sortProducts();
-    },[sortType])
 
     return (
         <ProductItems products={selectedProducts} currency={currency} />
-
-
     )
 }
 export default AllCollections;

@@ -16,7 +16,7 @@ import LoginPage from './pages/LoginPage'
 import About from './pages/About'
 import Contact from './pages/Contact'
 
-function App() {
+function App() { // 9:51
   return (
     <div className = 'px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
       <ToastContainer />
