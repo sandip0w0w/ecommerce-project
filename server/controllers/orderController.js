@@ -1,12 +1,35 @@
 const Order = require("../models/Order");
 const User = require("../models/User");
 const Stripe = require('stripe');
+const crypto = require('crypto');
+const currencyConvert = require('../utils/converter');
 
 const currency = 'usd';
 const deliveryCharge = 10;
 
 // gateway intialization
 const stripe = new Stripe(process.env.STRIPE_SEC_KEY);
+
+// uuid generation
+const generateRandomString = () =>{
+    const strings = "jdkfjakfjdkjj34kj23i42i4u23i4u23i423u4i";
+    let code = "";
+    let length = 25;
+    for (let i = 0; i < length; i++) {
+        code += strings[Math.floor(Math.random() * strings.length)];
+  }
+  return code;
+}
+
+// signature generation
+const generateSignature = (message, secret) => {
+    return crypto
+        .createHmac('sha256', secret)
+        .update(message)              
+        .digest('base64');            
+};
+
+
 // placing order using COD Method
 const placeOrder = async(req, res) => {
 
@@ -95,8 +118,70 @@ const placeOrderStripe = async(req, res) => {
     
 }
 
-// verify stripe payment
-const verifyStripe = async(req, res) => {
+const placeOrderESEWA = async (req, res) => {
+  try {
+    const { userId } = req.session;
+    const { items, amount, address } = req.body;
+    const { origin } = req.headers;
+
+    const transaction_uuid = generateRandomString();
+    const product_code = "EPAYTEST";
+    const secretKey = '8gBm/:&EnhH.1/q';
+
+    const tax_amount = 0;
+    const product_service_charge = 0;
+
+    const [convertedAmount, product_delivery_charge] = await Promise.all([
+        currencyConvert(amount),
+        currencyConvert(deliveryCharge)
+    ]);
+
+    const total_amount = (convertedAmount + product_service_charge + product_delivery_charge + tax_amount).toFixed(2);
+    
+    const signature = generateSignature(
+      `total_amount=${total_amount},transaction_uuid=${transaction_uuid},product_code=${product_code}`,
+      secretKey
+    );
+
+    const orderData = {
+      userId,
+      address,
+      items,
+      amount, 
+      paymentMethod: "ESEWA",
+      payment: false,
+      date: Date.now()
+    };
+
+    const newOrder = new Order(orderData);
+    await newOrder.save();
+
+    return res.json({
+      success: true,
+      esewaData: {
+        amount: convertedAmount,
+        tax_amount,
+        total_amount,
+        transaction_uuid,
+        product_code,
+        product_service_charge,
+        product_delivery_charge,
+        success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
+        failure_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
+        signed_field_names: "total_amount,transaction_uuid,product_code",
+        signature
+      },
+      esewaUrl: "https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+    });
+
+  } catch (error) {
+    console.error("eSewa Order Error:", error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// verify online payment
+const verifyPayment = async(req, res) => {
     const { userId }  = req.session;
     const { orderId, success } = req.body;
     try{
@@ -154,5 +239,6 @@ const updateStatus = async(req, res) => {
 module.exports = {
     placeOrder, placeOrderStripe,
     allOrders, userOrders, updateStatus,
-    verifyStripe
+    verifyPayment,
+    placeOrderESEWA
 }

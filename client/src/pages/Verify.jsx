@@ -11,7 +11,7 @@ function Verify() { // 12:45
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const success = searchParams.get('success');
-    const orderId = searchParams.get('orderId');
+    const orderId = searchParams.get('orderId').split('?')[0];
 
     const verifyPayment = async() => {
         try{
@@ -19,9 +19,9 @@ function Verify() { // 12:45
             if(!user){
                 return null
             }
-
-            const response = await api.post('order/verifyStripe', {success, orderId});
-
+            console.log(orderId);
+            const response = await api.post('order/verifyPayment', {success, orderId});
+            console.log(response);
             if(response.data.success){
                 setCartItems({});
                 navigate('/orders')
@@ -38,7 +38,7 @@ function Verify() { // 12:45
 
     useEffect(() => {
      verifyPayment();   
-    }, [user]);
+    },[user]);
 
   return (
     <div>Verify</div>
