@@ -20,7 +20,7 @@ function ProductDetail() { // 3:34
     }, [id, products]);
 
     return currentProduct ? (
-        <div className="border-t-2 border-t-gray-300 pt-10">
+        <div className="pt-10">
 
             {/* product overview */}
 

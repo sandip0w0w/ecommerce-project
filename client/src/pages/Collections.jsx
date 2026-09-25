@@ -5,6 +5,7 @@ import { assets } from '../assets/assets'
 import { ShopContext } from '../context/ShopContext'
 
 function Collections() {
+    
     const [filterHidden, setFilterHidden] = useState(true);
     const [category, setCategory] = useState([]);
     const [subCategory, setSubCategory] = useState([]);
@@ -31,7 +32,7 @@ function Collections() {
 
 
     return ( 
-        <div className="flex flex-col sm:flex-row border-t border-t-gray-300 py-15 gap-10">
+        <div className="flex flex-col sm:flex-row py-15 gap-10">
             {/* filters */}
             <div className="flex-1 py-5">
                 <div className='flex gap-2 items-center'>

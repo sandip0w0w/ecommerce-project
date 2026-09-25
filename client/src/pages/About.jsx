@@ -5,7 +5,7 @@ import LetterBox from '../component/LetterBox'
 
 function About() { // 5:03
   return (
-    <div className="border-t border-gray-300 pt-6 flex flex-col gap-4">
+    <div className="pt-6 flex flex-col gap-4">
 
       <h2 className="text-xl self-center"><Title text1={'ABOUT'} text2={'US'} /></h2>
 
