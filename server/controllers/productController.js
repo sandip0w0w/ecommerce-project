@@ -58,8 +58,7 @@ const listProduct = async (req, res) => {
 }
 
 // remove products
-const removeProduct = async (req, res) => {
-    
+const removeProduct = async (req, res) => { 
     try{
         const product = await Product.findByIdAndDelete(req.body.id);
         return res.status(200).json({message: `${product.name} removed.`})

@@ -7,7 +7,7 @@ const { addProduct,
 const upload = require('../middleware/multer');
 const {protect, protectAdmin} = require('../middleware/adminAuth')
 
-router.get("/",protect, listProduct);
+router.get("/",listProduct);
 router.post("/add",protect, protectAdmin , upload.fields([{name:'image1',maxCount:1},
     {name:'image2',maxCount:1},
     {name:'image3',maxCount:1},

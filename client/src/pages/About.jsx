@@ -5,7 +5,7 @@ import LetterBox from '../component/LetterBox'
 
 function About() { // 5:03
   return (
-    <div className="border-t border-gray-300 pt-6 flex flex-col gap-4">
+    <div className="pt-6 flex flex-col gap-4">
 
       <h2 className="text-xl self-center"><Title text1={'ABOUT'} text2={'US'} /></h2>
 
@@ -53,10 +53,10 @@ function About() { // 5:03
             </div>
           </div>
 
-          {/* Exception Customer Service */}
+          {/* Exceptional Customer Service */}
            <div className="flex justify-center items-center gap-3 p-10 border border-gray-300">
             <div className='flex flex-col gap-3'>
-              <p className = 'font-semibold text-[13px]'>Exception Customer Service:</p>
+              <p className = 'font-semibold text-[13px]'>Exceptional Customer Service:</p>
             <p className='font-normal text-[13px] text-gray-600'>Our team of dedicated professionals is here to assist you the way, ensuring your satisfaction is our top priority.</p>
             </div>
           </div>

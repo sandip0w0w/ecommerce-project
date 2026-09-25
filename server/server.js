@@ -5,7 +5,9 @@ const connectDb = require('./config/mongoDb');
 const mongoose = require('mongoose');
 const connectCloudinary = require('./config/cloudinary');
 const userRoutes = require('./routes/userRoutes');
-const productRoutes = require('./routes/productRoutes')
+const productRoutes = require('./routes/productRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 // app config
 
@@ -28,6 +30,8 @@ app.get('/', (req, res) =>{
 
 app.use("/api/user", userRoutes)
 app.use("/api/product", productRoutes)
+app.use("/api/cart", cartRoutes)
+app.use("/api/order", orderRoutes)
 
 
 

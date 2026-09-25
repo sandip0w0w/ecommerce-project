@@ -5,7 +5,7 @@ import LetterBox from '../component/LetterBox'
 
 function Contact() {
     return (
-        <div className="border-t border-gray-300 pt-7 flex flex-col gap-4">
+        <div className="pt-7 flex flex-col gap-4">
             <h2 className='text-xl self-center'><Title text1={'CONTACT'} text2={'US'} /></h2>
             <div className="flex flex-col sm:flex-row sm:mx-30">
                 <img src={assets.contact_img} alt="" className='w-full md:max-w-[480px]' />

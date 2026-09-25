@@ -5,7 +5,7 @@ import { assets } from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 
 function Cart() { 
-    const { products, cartItems, currency, updateQuantity, getCartTotal } = useContext(ShopContext);
+    const { products, cartItems, currency, updateQuantity, getCartTotal, loading } = useContext(ShopContext);
     const shippingFee = 10;
     const totalCheckout = getCartTotal() > 0 ? (getCartTotal() + shippingFee) : 0;
     const navigate = useNavigate();
@@ -27,8 +27,16 @@ function Cart() {
         setCartData(tempData);
     }, [cartItems])
 
+    if(loading){
+        return(
+            <p>
+                Loading......
+            </p>
+        )
+    }
+    
     return (
-        <div className="border-t border-t-gray-300 pt-15">
+        <div className="pt-15">
             <h2 className="text-2xl"><Title text1='YOUR' text2='CART' /></h2>
             <div>
                 {
