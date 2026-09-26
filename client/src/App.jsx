@@ -16,6 +16,7 @@ import LoginPage from './pages/LoginPage'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Verify from './pages/Verify'
+import NA from './pages/NA'
 
 function App() { // 9:51
   return (
@@ -38,6 +39,7 @@ function App() { // 9:51
         <Route path =  "/about" element = {<About />} />
         <Route path = "/contact" element = {<Contact />} />
         <Route path = "/verify" element = {<Verify />} />
+        <Route path = '/*' element {<NA />} />
       </Routes>
       </main>
       
