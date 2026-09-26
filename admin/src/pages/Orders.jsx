@@ -75,7 +75,7 @@ function Orders() {
            <div className="flex flex-col gap-1 text-xs text-gray-600">
             <p>Items: {order.items.length}</p>
             <p>Method: {order.paymentMethod}</p>
-            <p>Method: {order.payment ? "Paid" : "Pending"}</p>
+            <p>Status: {order.payment ? "Paid" : "Pending"}</p>
             <p>Date: {formatDate(order.date)}</p>
            </div>
 
