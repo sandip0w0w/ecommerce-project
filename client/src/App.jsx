@@ -39,7 +39,7 @@ function App() { // 9:51
         <Route path =  "/about" element = {<About />} />
         <Route path = "/contact" element = {<Contact />} />
         <Route path = "/verify" element = {<Verify />} />
-        <Route path = '/*' element {<NA />} />
+        <Route path = '*' element = {<NA />} />
       </Routes>
       </main>
       
