@@ -31,7 +31,7 @@ export function AuthProvider({children}){
 
     useEffect(() => {
         refreshSession();
-    }, []);
+    }, [token]);
 
     const login = async (email, password) => {
         const {data} = await api.post("/user/login", {email,password})
@@ -48,7 +48,7 @@ export function AuthProvider({children}){
         setUser(null);
     }
 
-    const value = { user, token, login, logout, loading, refreshSession}
+    const value = { user, token, login, logout, loading, refreshSession, setToken}
 
     return <AuthContext.Provider value = {value} >
         {children}
