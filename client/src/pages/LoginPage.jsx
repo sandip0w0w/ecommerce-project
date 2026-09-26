@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
     const [isLogin, setIsLogin] = useState(true);
-    const { login, loading, user } = useAuth();
+    const { login, loading, user, setToken } = useAuth();
     const [isVisible, setIsVisible] = useState(false);
     const togglePassword = () => setIsVisible((prev) => !prev);
     const [password, setPassword] = useState('');
@@ -22,15 +22,21 @@ function LoginPage() {
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
+        const formElement = e.target;
+        const formData = new FormData(formElement);
         const data = Object.fromEntries(formData);
         console.log(data.email);
         try{
             if(!isLogin){
                 const response = await api.post('/user/register', data);
-                console.log(response);
-                if(response.data.status){
+                if(response.data.success){
                     toast.success("User Created");
+                    if(response.data.token){
+                        localStorage.setItem("token", response.data.token);
+                        setToken(response.data.token);
+                    }
+                    formElement.reset();
+                    navigate("/");
                 }else{
                     toast.error(response.data.message);
                 }
