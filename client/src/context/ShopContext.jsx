@@ -14,6 +14,7 @@ const ShopContextProvider = (props) => { // 10:20
     const [orderedItems, setOrderedItems] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [discount, setDiscount] = useState(0);
     const { user } = useAuth();
 
     const fetchProducts = async () => {
@@ -150,7 +151,7 @@ const ShopContextProvider = (props) => { // 10:20
         search, setSearch, showSearch,
         setShowSearch, cartItems, addToCart, getCartCount,
         updateQuantity, getCartTotal, setCartItems, orderedItems, setOrderedItems, loading,
-        getUserCart
+        getUserCart,discount, setDiscount
 
     }
 

@@ -11,7 +11,7 @@ function ProductItems({products, currency}) {
         )
     }
   return (
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(170px,0.8fr))] gap-4 place-content-center">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(170px,200px))] gap-4 place-content-center">
         {products.map((product) => (
             <Link to = {`/product/${product._id}`} key = {product._id}  className="flex flex-col mb-5 h-80">
                 <div className="flex-3 overflow-hidden">

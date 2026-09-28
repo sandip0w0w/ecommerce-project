@@ -35,7 +35,7 @@ const placeOrder = async(req, res) => {
 
     try{
         const { userId } = req.session;
-        const {items, amount, address } = req.body;
+        const {items, amount, address, discount } = req.body;
         const orderData = {
             userId,
             address,
@@ -43,7 +43,8 @@ const placeOrder = async(req, res) => {
             amount,
             paymentMethod: "COD",
             payment: false,
-            date: Date.now()
+            date: Date.now(),
+            discount
         }
 
         const newOrder = new Order(orderData);
@@ -64,7 +65,7 @@ const placeOrder = async(req, res) => {
 const placeOrderStripe = async(req, res) => {
     try{
         const { userId } = req.session;
-        const {items, amount, address } = req.body;
+        const {items, amount, address, discount } = req.body;
         const { origin } = req.headers;
 
         const orderData = {
@@ -74,7 +75,8 @@ const placeOrderStripe = async(req, res) => {
             amount,
             paymentMethod: "Stripe",
             payment: false,
-            date: Date.now()
+            date: Date.now(),
+            discount
         }
 
         const newOrder = new Order(orderData);
@@ -102,10 +104,22 @@ const placeOrderStripe = async(req, res) => {
             quantity: 1
         })
 
+        let discounts = []
+        if(discount > 0){
+            const coupon = await stripe.coupons.create({
+                amount_off: Math.round(discount * 100),
+                currency: currency,
+                duration: 'once',
+                name : 'Coupon Discout'
+            });
+            discounts.push({coupon: coupon.id});
+        }
+
         const session = await stripe.checkout.sessions.create({
             success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
             cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
             line_items,
+            discounts: discounts,
             mode: 'payment', 
         })  
 
@@ -113,6 +127,7 @@ const placeOrderStripe = async(req, res) => {
 
 
     }catch(error){
+        await Order.findByIdAndDelete(newOrder._id);
         res.json({success: false, message: error.message});
     }
     
@@ -121,7 +136,7 @@ const placeOrderStripe = async(req, res) => {
 const placeOrderESEWA = async (req, res) => {
   try {
     const { userId } = req.session;
-    const { items, amount, address } = req.body;
+    const { items, amount, address, discount } = req.body;
     const { origin } = req.headers;
 
     const transaction_uuid = generateRandomString();
@@ -131,12 +146,13 @@ const placeOrderESEWA = async (req, res) => {
     const tax_amount = 0;
     const product_service_charge = 0;
 
-    const [convertedAmount, product_delivery_charge] = await Promise.all([
+    const [convertedAmount, product_delivery_charge, convertedDiscount] = await Promise.all([
         currencyConvert(amount),
-        currencyConvert(deliveryCharge)
+        currencyConvert(deliveryCharge),
+        currencyConvert(discount)
     ]);
 
-    const total_amount = (convertedAmount + product_service_charge + product_delivery_charge + tax_amount).toFixed(2);
+    const total_amount = (convertedAmount + product_service_charge + product_delivery_charge + tax_amount - convertedDiscount).toFixed(2);
     
     const signature = generateSignature(
       `total_amount=${total_amount},transaction_uuid=${transaction_uuid},product_code=${product_code}`,
@@ -150,7 +166,8 @@ const placeOrderESEWA = async (req, res) => {
       amount, 
       paymentMethod: "ESEWA",
       payment: false,
-      date: Date.now()
+      date: Date.now(),
+      discount
     };
 
     const newOrder = new Order(orderData);
@@ -159,7 +176,7 @@ const placeOrderESEWA = async (req, res) => {
     return res.json({
       success: true,
       esewaData: {
-        amount: convertedAmount,
+        amount: convertedAmount - convertedDiscount,
         tax_amount,
         total_amount,
         transaction_uuid,
@@ -176,6 +193,7 @@ const placeOrderESEWA = async (req, res) => {
 
   } catch (error) {
     console.error("eSewa Order Error:", error.message);
+    await Order.findByIdAndDelete(newOrder._id);
     res.json({ success: false, message: error.message });
   }
 };

@@ -9,9 +9,9 @@ import initiatePayment from '../utils/esewa';
 
 
 function PlaceOrder() {
-    const { currency, getCartTotal, cartItems, products, setCartItems } = useContext(ShopContext);
+    const { currency, getCartTotal, cartItems, products, setCartItems, discount} = useContext(ShopContext);
     const shippingFee = 10;
-    const totalCheckout = getCartTotal() > 0 ? (getCartTotal() + shippingFee) : 0;
+    const totalCheckout = getCartTotal() > 0 ? (getCartTotal() + shippingFee - discount) : 0;
     const [paymentType, setPaymentType] = useState('cod');
 
     const onSubmitHandler = async (event) => {
@@ -39,7 +39,8 @@ function PlaceOrder() {
             let orderData = {
                 address: data,
                 items: orderItems,
-                amount: totalCheckout,
+                amount: getCartTotal(),
+                discount: discount,
             }
 
             let response;
@@ -131,6 +132,13 @@ function PlaceOrder() {
                         <p className='text-xs'>Shipping Fee</p>
                         <p className='text-xs'>{currency}{shippingFee}</p>
                     </div>
+
+                     {discount > 0 && (
+                            <div className='flex justify-between border-b border-gray-300 p-2 text-green-600'>
+                                <p className='text-xs'>Discount Applied</p>
+                                <p className='text-xs'>-{currency}{discount}</p>
+                            </div>
+                        )}
 
                     {/* total */}
                     <div className='flex justify-between  p-2'>
