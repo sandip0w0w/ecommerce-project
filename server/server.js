@@ -8,6 +8,7 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const couponRoutes = require('./routes/couponRoutes');
 
 // app config
 
@@ -32,6 +33,7 @@ app.use("/api/user", userRoutes)
 app.use("/api/product", productRoutes)
 app.use("/api/cart", cartRoutes)
 app.use("/api/order", orderRoutes)
+app.use("/api/coupon", couponRoutes)
 
 
 

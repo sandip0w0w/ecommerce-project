@@ -31,8 +31,6 @@ const addProduct = async (req, res) => { // 6:58
             date: Date.now()
         }
 
-        console.log(productData);
-
         const product = new Product(productData);
         await product.save();
 
