@@ -10,13 +10,23 @@ function ProductDetail() { // 3:34
     const { products, currency, addToCart } = useContext(ShopContext);
     const [currentProduct, setCurrentProduct] = useState(null);
     const [productSize, setProductSize] = useState('');
+    const [productImage, setProductImage] = useState(0);
+    
+    const handleImageChange = (index) => {
+        setProductImage(index);
+    }
     const ratings = () => {
         return Math.floor(Math.random() * (10 - 1 + 1)) + 1;
     }
     const [relatedProducts, setRelatedProducts] = useState([])
     useEffect(() => {
         setCurrentProduct(products.find(item => item._id === id));
-        setRelatedProducts(products.filter(item => (item.name).includes(products.find(item => item._id === id).name)));
+        setRelatedProducts(products.filter(item => 
+            (item.subCategory).includes(products.find(item => item._id === id).subCategory) &&
+            (item.category).includes(products.find(item => item._id === id).category) &&
+            item._id !== id
+            
+    ));
     }, [id, products]);
 
     return currentProduct ? (
@@ -29,14 +39,13 @@ function ProductDetail() { // 3:34
                 {/* product images */}
                 <div className='flex flex-col-reverse sm:flex-row gap-4'>
                     <div className='flex sm:flex-col justify-between sm:justify-normal sm:w-[18.7%] w-full'>
-                        <img src={currentProduct.image} alt="" className=" w-[24%] sm:w-full sm:mb-3 shrink-0" />
-                        <img src={currentProduct.image} alt="" className=" w-[24%] sm:w-full sm:mb-3 shrink-0" />
-                        <img src={currentProduct.image} alt="" className=" w-[24%] sm:w-full sm:mb-3 shrink-0" />
-                        <img src={currentProduct.image} alt="" className=" w-[24%] sm:w-full sm:mb-3 shrink-0" />
-
+                        <img src={currentProduct.image[0] || currentProduct.image[0]} onClick={() =>handleImageChange(0)} alt="" className=" w-[24%] sm:w-full sm:mb-3 shrink-0" />
+                        <img src={currentProduct.image[1] || currentProduct.image[0]} onClick={() =>handleImageChange(1)} alt="" className=" w-[24%] sm:w-full sm:mb-3 shrink-0" />
+                        <img src={currentProduct.image[2] || currentProduct.image[0]} onClick={() =>handleImageChange(2)} alt="" className=" w-[24%] sm:w-full sm:mb-3 shrink-0" />
+                        <img src={currentProduct.image[3] || currentProduct.image[0]} onClick={() =>handleImageChange(3)} alt="" className=" w-[24%] sm:w-full sm:mb-3 shrink-0" />
                     </div>
                     <div className="w-full sm:w-[80%]">
-                        <img className='w-full h-auto' src={currentProduct.image} alt="" />
+                        <img className='w-full h-auto' src={currentProduct.image[productImage] || currentProduct.image[0]} alt="" />
                     </div>
                 </div>
 
