@@ -1,6 +1,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets'
+import {Ticket} from 'lucide-react'
+
 function SideBar() {
   return (
   
@@ -21,6 +23,12 @@ function SideBar() {
             <NavLink className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l" to = "/orders" >
                 <img src={assets.order_icon} alt="" className='w-5' />
                 <p className='hidden sm:block'>Orders</p>
+            </NavLink>
+
+            {/* coupons */}
+            <NavLink className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l" to = "/coupons" >
+                <Ticket className='w-5' />
+                <p className='hidden sm:block'>Coupons</p>
             </NavLink>
 
 

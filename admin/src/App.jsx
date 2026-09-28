@@ -6,6 +6,7 @@ import List from './pages/List'
 import Orders from './pages/Orders'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
+import Coupon from './pages/Coupon'
 
 
 function App() { 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/add" element={<Add />} />
           <Route path="/list" element={<List />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/coupons" element={<Coupon />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
     </Routes>
