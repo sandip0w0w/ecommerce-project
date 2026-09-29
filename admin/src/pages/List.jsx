@@ -1,16 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import api from '../api/axios';
 import toast, { Toaster } from 'react-hot-toast';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-function List() { // 9: 20
-  
-  const [list, setList] = useState([]);
 
-  const fetchProducts = async () => {
+const fetchProducts = async () => {
     try{
       const response = await api.get("/product");
       if(response.data?.products){
-      setList(response.data.products);
+      return response.data.products || [];
       }
       else {
         Toaster.error(response.data.message);
@@ -19,24 +17,40 @@ function List() { // 9: 20
       Toaster.error(error.message);
     }
   }
-  useEffect(() => {
-    fetchProducts();
-  }, [])
 
-  const handleDeleteProduct = async (id) => {
-    try{
-      console.log(id);
-      const response = await api.post("/product/remove", {id});
-      if(response.data){
-        toast.success('Product Deleted!');
-        await fetchProducts();
-      }else{
-        toast.error(response.data.message)
-      }
-    }catch(error){
-      toast.error(error.message);
-    }
-  }
+function List() {
+
+  const queryClient = useQueryClient();
+
+  const { data: list = [], isLoading, isError, error } = useQuery({
+    queryKey: ['products'],
+    queryFn: fetchProducts,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => api.post('/product/remove', { id }),
+
+    onMutate: async (deleteId) => {
+      await queryClient.cancelQueries({ queryKey: ['products'] });
+      
+      const previousProducts = queryClient.getQueryData(['products']);
+
+      queryClient.setQueryData(['products'], (old = []) => 
+      old.filter((product) => product._id !== deleteId)
+    );
+    return { previousProducts };
+    },
+
+    onError: (err, newTodo, context ) => {
+      queryClient.setQueryData(['products'], context.previousProducts);
+      toast.error(err.message || 'Failed to delete product');
+    },
+
+    onSuccess: () => {
+      toast.success('Product Deleted!');
+    },
+
+  });
 
   return (
     <div className="flex flex-col gap-3 py-5 px-13">
@@ -48,16 +62,20 @@ function List() { // 9: 20
         <p>Price</p>
         <p>Action</p>
       </div>
-      {list.map((item, idx) => (
+      {isLoading && list.length === 0 ? (
+        <p className="py-4 text-sm text-gray-500">Loading products...</p>
+      ) : (
+        list.map((item, idx) => (
         <div key = {idx} className = "grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py-1 px-2 border border-gray-200 text-sm">
             <img src={item.image[0]} alt="" className='w-25' />
             <p>{item.name}</p>
             <p>{item.category}</p>
             <p>${item.price}</p>
-            <p onClick = {() => handleDeleteProduct(item._id)} >X</p>
-         
+            <p onClick = {() => deleteMutation.mutate(item._id)} >X</p>
           </div>
-      ))}
+      ))
+      )}
+      
     </div>
   )
 }
