@@ -4,46 +4,42 @@ import { useState } from 'react'
 import { LoaderCircle, SquarePen, TicketPlus, TrendingUp } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-function CouponDialog({ item }) {
+function CouponDialog({ item, isEdit}) {
 
+    const queryClient = useQueryClient();
     const [isOpen, setIsOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
+    const mutation = useMutation({
+        mutationFn : async(data) => {
+            if(item || isEdit) {
+                return await api.post('/coupon/update', data);
+            }
+            return await api.post('/coupon/add', data);
+        },
+        onSuccess: (response) => {
+            if(response.data.success){
+                toast.success(isEdit ? 'Coupon Updated' : 'Coupon Created');
+                queryClient.invalidateQueries({ queryKey: ['coupons']});
+                setIsOpen(false);
+            }else{
+                toast.error(response.data.message);
+            }
+        },
+        onError: (err) => {
+            toast.error(err.response?.data?.message || err.message);
+        },
+    })
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        try{
-            let response;
-            const formElement = e.target;
-            const formData = new FormData(formElement);
+        const formElement = e.target;
+        const formData = new FormData(formElement);
             if(item){
                 formData.append("id", item._id);
             }
-            const data = Object.fromEntries(formData);
-            console.log(data);
-            setIsLoading(true);
-
-            if(!item){
-                response = await api.post('/coupon/add', data);
-            }else {
-                response = await api.post("/coupon/update", data);
-            }
-            
-            if(response.data.success){
-                
-                toast.success(response.data.message);
-                setIsOpen(false);
-                formElement.reset();
-            }else{
-                toast.error(response.data.message);
-                console.log(response.data.message);
-            }
-
-        }catch(error){
-            toast.error("Error adding coupons. Please try again!")
-        }finally{
-            setIsLoading(false);
-        }
+        const data = Object.fromEntries(formData);
+        mutation.mutate(data);    
     }
 
     return (
@@ -121,7 +117,7 @@ function CouponDialog({ item }) {
 
                                     {/* submit button */}
                                     <div className="mt-4">
-                                        {isLoading ? <button  className='bg-green-500 text-white px-5 py-1 rounded text-sm font-medium disabled:cursor-not-allowed' disabled ><LoaderCircle className='animate-spin h-5 w-5' /></button>
+                                        {mutation.isPending ? <button  className='bg-green-500 text-white px-5 py-1 rounded text-sm font-medium disabled:cursor-not-allowed' disabled ><LoaderCircle className='animate-spin h-5 w-5' /></button>
                                         : 
                                         (item ? <button type="submit" className='bg-green-500 text-white px-3 py-1 rounded text-sm font-medium' >Update</button> :
                                         <button type="submit" className='bg-green-500 text-white px-3 py-1 rounded text-sm font-medium' >Create</button>)
