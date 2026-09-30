@@ -3,7 +3,7 @@ import { ShopContext } from '../context/ShopContext'
 import Title from './Title'
 import ProductItems from './ProductItems';
 
-function AllCollections({category, subCategory, sortType}) { // 2:30
+function AllCollections({category, subCategory, sortType}) {
     const { products, currency, search, showSearch, loading } = useContext(ShopContext);
     const [selectedProducts, setSeletectedProducts] = useState([]);
    const applyFiltersAndSort = () => {

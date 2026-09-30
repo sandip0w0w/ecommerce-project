@@ -103,9 +103,9 @@ function Cart() {
                     <div className=''>
                     <form onSubmit={handleCouponCode} className='flex flex-col gap-1'>
                         <p><Title text1={"Apply"} text2 = {"Discount"} /></p>
-                        <input type="text" name = "code" placeholder='Enter coupon code' className='border border-gray-700 py-1 px-3 text-xs rounded focus:outline-none focus:border-0 focus:ring-2 focus:ring-pink-400' />
-                        <button type = "submit" className='bg-green-500 text-white p-1 rounded text-xs w-20 cursor-pointer'>
-                            {isChecking ? <LoaderCircle className='animate-spin h-5 w-5' /> : "Check"}</button>
+                        <input type="text" name = "code" placeholder='Enter coupon code' className='border border-gray-700 py-2 px-3 text-xs rounded focus:outline-none focus:border-0 focus:ring-2 focus:ring-pink-400' />
+                        <button type = "submit" className='bg-black text-white py-2 text-xs w-25 mt-2 cursor-pointer'>
+                            {isChecking ? <LoaderCircle className='animate-spin h-5 w-5' /> : "CHECK"}</button>
                     </form>
                     </div>
 
