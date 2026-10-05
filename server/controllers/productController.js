@@ -47,10 +47,42 @@ const addProduct = async (req, res) => { // 6:58
 const listProduct = async (req, res) => {
 
     try{
-        const products = await Product.find({});
-        res.status(200).json({products});
+
+        let page = parseInt(req.query.page);
+        let limit = parseInt(req.query.limit);
+
+        if(isNaN(page) || page < 1) page = 1;
+        if(isNaN(limit) || limit < 1) limit = 6;
+        if(limit > 100) limit = 100;
+
+        const skip = (page - 1) * limit;
+
+        const [products, totalProducts] = await Promise.all([
+            Product.find({})
+                    .skip(skip)
+                    .limit(limit)
+                    .lean(),
+                    Product.countDocuments({})
+        ]);
+
+        const totalPages = Math.ceil(totalProducts / limit);
+
+        return res.status(200).json({
+            success: true,
+            products,
+            pagination: {
+                totalProducts,
+                totalPages,
+                currentPage: page,
+                limit,
+                hasNextPage: page < totalPages,
+                hasPrevPage: page > 1,
+                nextPage: page < totalPages ? page + 1: null,
+                prevPage: page > 1 ? page - 1: null
+            }
+        });
     }catch(error){
-        return res.status(400).json({message: error.message})
+        return res.status(500).json({message: error.message})
     }
     
 }
