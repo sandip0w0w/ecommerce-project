@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@upstash/redis": "^1.39.0",
     "bcrypt": "^6.0.0",
     "cash-changer": "^1.1.1",
     "cloudinary": "^2.11.0",
