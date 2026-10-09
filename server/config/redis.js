@@ -1,13 +1,24 @@
 const { Redis } = require('@upstash/redis');
 
-const client = new Redis({
-    url: process.env.KV_REST_API_URL,
-    token: process.env.KV_REST_API_TOKEN,
-})
+const url = process.env.KV_REST_API_URL;
+const token = process.env.KV_REST_API_TOKEN;
+
+if (!url || !token) {
+    throw new Error(
+        'Redis credentials missing: KV_REST_API_URL and KV_REST_API_TOKEN must be set'
+    );
+}
+
+const client = new Redis({ url, token });
 
 const connectRedis = async () => {
-    await client.ping();
-    console.log("Redis connected successfully");    
-}
+    try {
+        await client.ping();
+        console.log('Redis connected successfully');
+    } catch (err) {
+        console.error('Redis connection failed:', err.message);
+        throw err;
+    }
+};
 
 module.exports = { connectRedis, client };
