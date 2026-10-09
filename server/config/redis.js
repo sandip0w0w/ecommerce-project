@@ -1,6 +1,6 @@
 const { Redis } = require('@upstash/redis');
 
-const client = Redis.fronEnv();
+const client = Redis.fromEnv();
 
 const connectRedis = async () => {
     try {
