@@ -1,5 +1,8 @@
 const {v2: cloudinary} = require('cloudinary');
 const Product = require('../models/Product');
+const { client } = require('../config/redis')
+const { getProductVersion, productCacheKey, bumpProductVersion } = require('../utils/cache')
+
 // adding a product
 const addProduct = async (req, res) => { // 6:58
     try{
@@ -33,7 +36,7 @@ const addProduct = async (req, res) => { // 6:58
 
         const product = new Product(productData);
         await product.save();
-
+        await bumpProductVersion();
         res.status(201).json({message: "Product added!"})
 
     }catch(error){
@@ -50,13 +53,20 @@ const listProduct = async (req, res) => {
 
         let page = parseInt(req.query.page);
         let limit = parseInt(req.query.limit);
-
-        if(isNaN(page) || page < 1) page = 1;
-        if(isNaN(limit) || limit < 1) limit = 6;
-        if(limit > 100) limit = 100;
+        if (!Number.isInteger(page)  || page  < 1) page  = 1
+        if (!Number.isInteger(limit) || limit < 1) limit = 40
+        if (limit > 100) limit = 100   
 
         const skip = (page - 1) * limit;
 
+        const version = await getProductVersion();
+        
+        const cacheKey = await productCacheKey(page, limit, version);
+
+        const cached = await client.get(cacheKey);
+        if(cached){
+            return res.json(JSON.parse(cached));
+        }
         const [products, totalProducts] = await Promise.all([
             Product.find({})
                     .skip(skip)
@@ -64,10 +74,10 @@ const listProduct = async (req, res) => {
                     .lean(),
                     Product.countDocuments({})
         ]);
-
+        
         const totalPages = Math.ceil(totalProducts / limit);
 
-        return res.status(200).json({
+        const response = {
             success: true,
             products,
             pagination: {
@@ -80,7 +90,14 @@ const listProduct = async (req, res) => {
                 nextPage: page < totalPages ? page + 1: null,
                 prevPage: page > 1 ? page - 1: null
             }
-        });
+        };
+
+        // storing in cache
+        if(products.length > 0){
+            const ttl = 3600 + Math.floor(Math.random() * 300);
+            await client.setEx(cacheKey, ttl, JSON.stringify(response));
+        }
+        return res.json(response);
     }catch(error){
         return res.status(500).json({message: error.message})
     }
@@ -91,6 +108,8 @@ const listProduct = async (req, res) => {
 const removeProduct = async (req, res) => { 
     try{
         const product = await Product.findByIdAndDelete(req.body.id);
+
+        await bumpProductVersion();
         return res.status(200).json({message: `${product.name} removed.`})
     }catch(error){
         return res.status(400).json({message: error.message})

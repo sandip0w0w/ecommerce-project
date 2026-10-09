@@ -9,6 +9,7 @@ const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const couponRoutes = require('./routes/couponRoutes');
+const { connectRedis } = require('./config/redis');
 
 // app config
 
@@ -18,6 +19,7 @@ const PORT  = process.env.PORT || 4000
 //connect database
 connectDb();
 connectCloudinary();
+connectRedis();
 
 // middlewares
 app.use(express.json())
