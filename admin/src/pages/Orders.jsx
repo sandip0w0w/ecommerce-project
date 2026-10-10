@@ -12,12 +12,14 @@ const ReactPaginate = ReactPaginatePkg.default || ReactPaginatePkg;
 
 function Orders() {
   const { user, loading } = useAuth();
-  const fetchAllOrders = async({ queryKey}) => {
+  const fetchAllOrders = async({ queryKey }) => {
     if(!user){
       return null;
     }
     const [_, page] = queryKey;
     const limit = 5;
+    console.log("Query Key");
+    console.log(queryKey);
 
     try{
       const response = await api.get(`/order/list?page=${page}&limit=${limit}`);
@@ -34,23 +36,6 @@ function Orders() {
 
   }
 
-  const statusHandler = async(event, orderId) => {
-    if(!user){
-      return null
-    }
-    try{
-      console.log(orderId);
-      console.log(event.target.value)
-      const response = await api.post('/order/status', {orderId, status: event.target.value});
-
-      if(response.data.success){
-        await fetchAllOrders();
-        toast.success(response.data.message);
-      }
-    }catch(error){
-      toast.error(error.message);
-    }
-  }
 
   const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
@@ -64,6 +49,21 @@ function Orders() {
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1);
   };
+    const statusHandler = async(event, orderId) => {
+    if(!user){
+      return null
+    }
+    try{
+      const response = await api.post('/order/status', {orderId, status: event.target.value});
+
+      if(response.data.success){
+        await queryClient.invalidateQueries({queryKey: ['orders']});
+        toast.success(response.data.message);
+      }
+    }catch(error){
+      toast.error(error.message);
+    }
+  }
 
   return (
     <>

@@ -48,7 +48,7 @@ function List() {
       await queryClient.cancelQueries({ queryKey: ['products'] });
       
       const previousProducts = queryClient.getQueryData(['products']);
-
+      
       queryClient.setQueryData(['products'], (old = []) => 
       old.filter((product) => product._id !== deleteId)
     );
@@ -63,6 +63,10 @@ function List() {
     onSuccess: () => {
       toast.success('Product Deleted!');
     },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['products']});
+    }
 
   });
 
