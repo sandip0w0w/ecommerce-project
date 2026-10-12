@@ -141,7 +141,7 @@ const placeOrderESEWA = async (req, res) => {
 
     const transaction_uuid = generateRandomString();
     const product_code = "EPAYTEST";
-    const secretKey = '8gBm/:&EnhH.1/q';
+    const secretKey = ESEWA_SEC_KEY;
 
     const tax_amount = 0;
     const product_service_charge = 0;
@@ -188,7 +188,7 @@ const placeOrderESEWA = async (req, res) => {
         signed_field_names: "total_amount,transaction_uuid,product_code",
         signature
       },
-      esewaUrl: "https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+      esewaUrl: process.env.ESEWA_URL
     });
 
   } catch (error) {
